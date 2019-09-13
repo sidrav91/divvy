@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.divvy.beans.StationStatistics;
+import com.divvy.dal.DivvyDal;
 
 public class DivvyService {
 	
@@ -11,7 +12,10 @@ public class DivvyService {
 	public StationStatistics getStatistics(String fromStationName) {
 		StationStatistics stationStatistics = new StationStatistics();
 		
+		stationStatistics.setStationName(fromStationName);
 		
+		DivvyDal divvyDal = new DivvyDal();
+		stationStatistics.setMostCommonDestination(divvyDal.getMostCommonDestination(fromStationName));
 		
 		return stationStatistics;
 	}
