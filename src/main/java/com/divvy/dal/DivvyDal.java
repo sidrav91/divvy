@@ -7,6 +7,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import com.divvy.beans.AgeGroup;
@@ -96,6 +98,61 @@ public class DivvyDal {
 		} catch (SQLException e) {
 		    throw new IllegalStateException("Cannot connect the database!", e);
 		}
+	}
+	
+	
+	public List<String> getTopRevenueGeneratingStations() {
+		List<String> topRevenueGeneratingStations = new ArrayList<String>();
+		
+		String url = "jdbc:mysql://" + prop.getProperty("db.host") + ":" + prop.getProperty("db.port") + "/" + prop.getProperty("db.schema_name");
+		try (Connection connection = DriverManager.getConnection(url, prop.getProperty("db.user"), prop.getProperty("db.password"));
+				Statement statement = connection.createStatement();) {
+			
+			String selectSql = "SELECT from_station_name, SUM(CEILING(timestampdiff(SECOND, STR_TO_DATE(start_time, '%d/%m/%Y %T'), STR_TO_DATE(end_time, '%d/%m/%Y %T')) / 60) * 0.10) as revenue, from_station_name\r\n" + 
+					"FROM    preventure.trip\r\n" + 
+					"GROUP BY from_station_name\r\n" + 
+					"ORDER BY revenue desc\r\n" + 
+					"limit 3;";
+			
+			ResultSet resultSet = null;
+            resultSet = statement.executeQuery(selectSql);
+            
+            while(resultSet.next()) {
+            	topRevenueGeneratingStations.add(resultSet.getString(1));
+            }
+            
+		} catch (SQLException e) {
+		    throw new IllegalStateException("Cannot connect the database!", e);
+		}
+		
+		return topRevenueGeneratingStations;
+	}
+	
+	
+	public List<Integer> getBikesToService() {
+		List<Integer> bikeIds = new ArrayList<Integer>();
+		
+		String url = "jdbc:mysql://" + prop.getProperty("db.host") + ":" + prop.getProperty("db.port") + "/" + prop.getProperty("db.schema_name");
+		try (Connection connection = DriverManager.getConnection(url, prop.getProperty("db.user"), prop.getProperty("db.password"));
+				Statement statement = connection.createStatement();) {
+			
+			String selectSql = "SELECT bikeid, SUM(timestampdiff(SECOND, STR_TO_DATE(start_time, '%d/%m/%Y %T'), STR_TO_DATE(end_time, '%d/%m/%Y %T'))) as ridetime\r\n" + 
+					"FROM preventure.trip\r\n" + 
+					"GROUP BY bikeid\r\n" + 
+					"HAVING CEILING(ridetime/60) >= 1000";
+			
+			ResultSet resultSet = null;
+            resultSet = statement.executeQuery(selectSql);
+            
+            while(resultSet.next()) {
+            	bikeIds.add(resultSet.getInt(1));
+            }
+            
+		} catch (SQLException e) {
+		    throw new IllegalStateException("Cannot connect the database!", e);
+		}
+		
+		return bikeIds;
 	}
 	
 

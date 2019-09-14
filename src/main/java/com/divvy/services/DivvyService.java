@@ -27,6 +27,8 @@ public class DivvyService {
 	public List<String> getTopRevenueStations() {
 		List<String> topRevenueStations = new ArrayList<String>();
 		
+		DivvyDal divvyDal = new DivvyDal();
+		topRevenueStations = divvyDal.getTopRevenueGeneratingStations();
 		
 		return topRevenueStations;
 	}
@@ -35,6 +37,9 @@ public class DivvyService {
 	// gets ids of bikes that need repair work
 	public List<Integer> getBikesToService() {
 		List<Integer> bikesToService = new ArrayList<Integer>();
+		
+		DivvyDal divvyDal = new DivvyDal();
+		bikesToService = divvyDal.getBikesToService();
 		
 		return bikesToService;
 	}
