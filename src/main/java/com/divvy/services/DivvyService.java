@@ -16,6 +16,8 @@ public class DivvyService {
 		
 		DivvyDal divvyDal = new DivvyDal();
 		stationStatistics.setMostCommonDestination(divvyDal.getMostCommonDestination(fromStationName));
+		stationStatistics.setAgeGroup(divvyDal.getPrevalentAgeGroup(fromStationName));
+		stationStatistics.setRevenueGenerated(divvyDal.getRevenueGenerated(fromStationName));
 		
 		return stationStatistics;
 	}
