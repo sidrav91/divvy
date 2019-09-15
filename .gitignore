@@ -1,3 +1,5 @@
 target/
 src/main/resources/config.properties
 src/main/java/com/divvy/dal/MyMain.java
+src/main/resources/config.properties
+.classpath

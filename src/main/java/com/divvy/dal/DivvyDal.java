@@ -21,13 +21,18 @@ public class DivvyDal {
 		try {
 			InputStream input = DivvyDal.class.getClassLoader().getResourceAsStream("config.properties");
 			prop.load(input);
+			Class.forName("com.mysql.jdbc.Driver");
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	public String getMostCommonDestination(String stationName) {
 		String url = "jdbc:mysql://" + prop.getProperty("db.host") + ":" + prop.getProperty("db.port") + "/" + prop.getProperty("db.schema_name");
+		
 		try (Connection connection = DriverManager.getConnection(url, prop.getProperty("db.user"), prop.getProperty("db.password"));
 				Statement statement = connection.createStatement();) {
 			
