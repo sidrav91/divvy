@@ -1,10 +1,15 @@
 package com.divvy.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.divvy.beans.StartTimeDuration;
 import com.divvy.beans.StationStatistics;
 import com.divvy.dal.DivvyDal;
+import com.divvy.util.PolyTrendLine;
+import com.divvy.util.TrendLine;
 
 public class DivvyService {
 	
@@ -18,6 +23,16 @@ public class DivvyService {
 		stationStatistics.setMostCommonDestination(divvyDal.getMostCommonDestination(fromStationName));
 		stationStatistics.setAgeGroup(divvyDal.getPrevalentAgeGroup(fromStationName));
 		stationStatistics.setRevenueGenerated(divvyDal.getRevenueGenerated(fromStationName));
+		
+		StartTimeDuration startTimeDuration = divvyDal.getDurationForStartTime(fromStationName);
+		TrendLine t = new PolyTrendLine(1);
+		t.setValues(startTimeDuration.getDurations().stream().mapToDouble(i->i).toArray(), startTimeDuration.getStartTimes().stream().mapToDouble(i->i).toArray());
+		
+		Map<Integer, Double> trendline = new HashMap<Integer, Double>();
+		for(int i = 0; i <= 23; i++) {
+			trendline.put(i, t.predict(i));
+		}
+		stationStatistics.setDurationTrend(trendline);
 		
 		return stationStatistics;
 	}

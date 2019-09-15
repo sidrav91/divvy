@@ -1,5 +1,9 @@
-com\divvy\dal\DivvyDal.class
+com\divvy\util\OLSTrendLine.class
 com\divvy\services\DivvyService.class
+com\divvy\util\TrendLine.class
+com\divvy\beans\StartTimeDuration.class
+com\divvy\dal\DivvyDal.class
 com\divvy\dal\MyMain.class
 com\divvy\beans\AgeGroup.class
 com\divvy\beans\StationStatistics.class
+com\divvy\util\PolyTrendLine.class
